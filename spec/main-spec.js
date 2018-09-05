@@ -1,4 +1,4 @@
-const printInventory = require('../main/main');
+const inventory = require('../main/main');
 
 describe('pos', function () {
     var inputs;
@@ -17,11 +17,34 @@ describe('pos', function () {
         ];
     });
 
+    var map = new Map();
+    map.set("ITEM000001", 5);
+    map.set("ITEM000003-2", 1);
+    map.set("ITEM000005", 3 );
+
+    it('should count item correct', function () {
+        var result = inventory.countItemSelected(inputs);
+
+        expect(result).toEqual(map);
+    });
+
+    it('should print correct item selected', function () {
+
+        var result = inventory.printSelected();
+
+        var expectText =
+            '名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n' +
+            '名称：荔枝，数量：2斤，单价：15.00(元)，小计：30.00(元)\n' +
+            '名称：方便面，数量：3袋，单价：4.50(元)，小计：9.00(元)\n';
+
+        expect(result).toEqual(expectText);
+    });
+
     it('should print correct text', function () {
 
         spyOn(console, 'log');
 
-        printInventory(inputs);
+        inventory.printInventory(inputs);
 
         var expectText =
             '***<没钱赚商店>购物清单***\n' +
