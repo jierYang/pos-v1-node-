@@ -2,7 +2,7 @@
   "name": "js-online-quiz-template",
   "version": "1.0.0",
   "description": "Powered by ThoughtWorks School",
-  "main": "app.js",
+  "src": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "node run-tests.js"

@@ -1,4 +1,5 @@
-const inventory = require('../main/main');
+const inventory = require('../src/main');
+const item = require('../src/item');
 
 describe('pos', function () {
     var inputs;
@@ -17,20 +18,17 @@ describe('pos', function () {
         ];
     });
 
-    var map = new Map();
-    map.set("ITEM000001", 5);
-    map.set("ITEM000003-2", 1);
-    map.set("ITEM000005", 3 );
+    var map = { 'ITEM000001': 5, 'ITEM000003': 2, 'ITEM000005': 3 };
 
     it('should count item correct', function () {
-        var result = inventory.countItemSelected(inputs);
+        var result = item.countItemSelected(inputs);
 
         expect(result).toEqual(map);
     });
 
     it('should print correct item selected', function () {
 
-        var result = inventory.printSelected();
+        var result = inventory.printSelected(map);
 
         var expectText =
             '名称：雪碧，数量：5瓶，单价：3.00(元)，小计：12.00(元)\n' +
