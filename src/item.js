@@ -1,8 +1,9 @@
 var FreeTypeOneFree = "BUY_TWO_GET_ONE_FREE";
 
-function caculateItemPrice(count, price, FreeType) {
+function calculateItemPrice(count, price, FreeType) {
     if (FreeType === FreeTypeOneFree) {
-        return (count - count / 3) * price;
+        return count>2? (count-1)*price :count*price;
+        // return (count - count / 3) * price;
     }
     else {
         return count * price;
@@ -29,6 +30,6 @@ function countItemSelected(inputs) {
 }
 
 module.exports = {
-    caculateItemPrice: caculateItemPrice,
+    calculateItemPrice: calculateItemPrice,
     countItemSelected: countItemSelected
 };

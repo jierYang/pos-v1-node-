@@ -2,44 +2,85 @@ const item = require("./item");
 
 const operateDB = require("./operateDB");
 
-var itemName = 0, itemUnit = 1, itemPrice = 2;
+var FreeTypeOneFree = "BUY_TWO_GET_ONE_FREE";
 
-function printSelected(itemCountMap) {
+var totalMoney;
+
+var totalFree;
+
+var itemFree = {};
+
+function getItemSelected(itemCount) {
+
     var result = "";
 
-    for (var i = 0; i < itemCountMap.length; i++) {
-        var itemMessage = operateDB.selectItem(itemCountMap[i].barcode);
+    totalMoney = 0;
+
+    totalFree = 0;
+
+    for (var currentItem in itemCount) {
+
+        var itemMessage = operateDB.selectItem(currentItem);
 
         if (itemMessage) {
 
-            var FreeType = operateDB.selectItemFreeType(itemMessage[itemName]);
+            var FreeType = operateDB.selectItemFreeType(currentItem);
 
-            var money = item.caculateItemPrice(itemCountMap[i].count, itemMessage[itemPrice], FreeType);
+            var money = item.calculateItemPrice(itemCount[currentItem], itemMessage.price, FreeType);
 
-            result +=i;
-            result += "名称：%s，数量：%s%s，单价：%s(元)，小计：%s(元)\n"
-                .format(itemMessage[itemName], itemCountMap[i].count, itemMessage[itemUnit], itemMessage[itemPrice], money);
+            result += `名称：${itemMessage.name}，数量：${itemCount[currentItem]}${itemMessage.unit}，单价：${itemMessage.price.toFixed(2)}(元)，小计：${money.toFixed(2)}(元)\n`;
+
+            saveOrder(money, itemMessage, FreeType);
         }
     }
     return result;
 }
 
+function saveOrder(money,itemMessage,FreeType){
+    totalMoney += money;
+
+    if(FreeType === FreeTypeOneFree){
+        totalFree += itemMessage.price;
+
+        itemFree[itemMessage.name] = 1 + itemMessage.unit;
+    }
+}
+
+function getItemFree(){
+    let result="";
+
+    for(let it in itemFree){
+        result+=`名称：${it}，数量：${itemFree[it]}\n`
+    }
+
+    return result;
+}
 
 function printInventory(inputs) {
-    console.log("***<没钱赚商店>购物清单***\n");
+    let output = "***<没钱赚商店>购物清单***\n";
 
-    var itemCountMap = countItemSelected(inputs);
+    var itemCount = item.countItemSelected(inputs);
 
-    printSelected(itemCountMap);
+    output += getItemSelected(itemCount);
 
-    console.log("----------------------\n");
+    output += "----------------------\n";
 
-    console.log("----------------------\n");
+    output +=`挥泪赠送商品：\n`;
 
-    console.log("**********************");
+    output += getItemFree();
+
+    output += "----------------------\n";
+
+    output += `总计：${totalMoney.toFixed(2)}(元)\n`;
+
+    output += `节省：${totalFree.toFixed(2)}(元)\n`;
+
+    output += "**********************";
+
+    console.log(output);
 };
 
 module.exports = {
     printInventory: printInventory,
-    printSelected: printSelected
+    getItemSelected: getItemSelected
 };

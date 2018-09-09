@@ -1,30 +1,31 @@
 const datbase = require("./datbase");
 
 function selectItem(itemName) {
-    var result = new Array();
+    let result = "";
 
-    var itmes = datbase.loadAllItems();
+    let items = datbase.loadAllItems();
 
-    for(var item in itmes){
+    for(let item in items){
 
         if(items[item].barcode === itemName){
-           result = itmes[item];
+           result = items[item];
         }
     }
 
     return result;
 }
 
-function selectItemFreeType(itemName) {
+function selectItemFreeType(barcodeObject) {
 
-    var result = new Array();
+    var result = "";
 
-    var itmes = datbase.loadPromotions();
+    var free = datbase.loadPromotions();
 
-    for(var item in itmes){
+    for(var barcode in free[0].barcodes){
 
-        if(items[item].barcode === itemName){
-            result.push(items[item].type);
+        if(free[0].barcodes[barcode] === barcodeObject){
+
+            result = free[0].type;
         }
     }
 
